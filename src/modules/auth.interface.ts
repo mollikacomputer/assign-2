@@ -4,4 +4,10 @@ export interface ISignup {
     email:string;
     password:string;
     role:"maintainer" | "contributor";
-}
+};
+
+export interface ILogin {
+    email:string;
+    password:string;
+    role:"maintainer" | "contributor";
+};

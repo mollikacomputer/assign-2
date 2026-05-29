@@ -5,9 +5,6 @@ import express, {
 } from "express";
 import { authRouter } from "./modules/auth.router";
 
-
-
-
 const app: Application = express();
 
 app.use(express.json());
