@@ -27,18 +27,6 @@ const createIssueIntoDB = async (payLoad: IIssue) => {
 };
 //-------end-issue created--------
 // //-------start-get all issue created--------
-// const getAllUsersFromDB = async()=>{
-//     const issueResult = await pool.query(`
-//         SELECT reported_id, title, description,status, type FROM ISSUES
-//         `);
-    
-//     const user = await pool.query(` SELECT * FROM users WHERE id=$1 `,[issueResult.rows[].issues_id]);
-
-//     const result = {issueResult, user};
-//     return result;
-        
-// }
-// //-------end-get all issue created--------
 const getAllIssuesFromDB = async () => {
 
   // 1. Get all issues
@@ -92,8 +80,31 @@ const getAllIssuesFromDB = async () => {
     data: formattedIssues
   };
 };
+//-------end-get all issue created--------
+//-------start-get single issue created--------
+// const getSingleIssueFromDB = async(reported_id:string)=>{
+//     const result = await pool.query(`
+//         SELECT * FROM issues WHERE reported_id =$1
+//         `, [reported_id])
+//     return result.rows[0];
+// };
 
+const getSingleIssueFromDB = async (id: number) => {
+  const result = await pool.query(
+    `
+      SELECT issues.*, users.name, users.email
+      FROM issues
+      JOIN users ON users.id = issues.reported_id
+      WHERE issues.id=$1
+    `,
+    [id]
+  );
+
+  return result.rows[0];
+};
+//-------end-get single issue created--------
 export const issueService = {
     createIssueIntoDB,
     getAllIssuesFromDB,
+    getSingleIssueFromDB,
 }
