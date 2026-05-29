@@ -19,6 +19,26 @@ const createIssue = async(req: Request, res:Response )=>{
         }
 }
 //----end-create issue----
+//----start-Get all issue----
+const getAllIssues = async(req:Request, res:Response)=>{
+    try {
+        const result = await issueService.getAllIssuesFromDB();
+        res.status(201).json({
+        status:true,
+        message:"User registered successfully.",
+        data:result,
+        });
+    } catch (error:any) {
+        res.status(500).json({
+        success:false,
+        message:error.message,
+        error:error,
+    });
+    }
+}
+//----end-Get all issue----
+
 export const issueController = {
     createIssue,
+    getAllIssues,
 }

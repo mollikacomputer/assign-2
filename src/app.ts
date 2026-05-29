@@ -9,7 +9,7 @@ import { issueRouter } from "./modules/issues/issues.router";
 const app: Application = express();
 
 app.use(express.json());
-app.use(express.text());
+// app.use(express.text());
 app.use(express.urlencoded({ extended: true }));
 
 // home page get api
