@@ -1,5 +1,5 @@
-import config from "../config";
-import { pool } from "../db";
+import config from "../../config";
+import { pool } from "../../db";
 import type { ILogin, ISignup } from "./auth.interface";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
@@ -25,7 +25,7 @@ const loginIntoDB = async(payLoad:ILogin) =>{
 
         if(userData.rows.length === 0){
             throw new Error("Invalid Email or Credintials!!");
-        }
+        };
     const user =userData.rows[0];
     const matchPassword = await bcrypt.compare(password, user.password)
     console.log("match password: ", matchPassword);
