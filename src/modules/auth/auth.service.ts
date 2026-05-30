@@ -8,7 +8,6 @@ import jwt from "jsonwebtoken";
 const signupUserInToDB = async(payLoad:ISignup)=>{
     const {id, name, email,  password, role} = payLoad;
     const hashedPassword = await bcrypt.hash(password, 10);
-    console.log("hashed password:", hashedPassword);
     const result = await pool.query(`
         INSERT INTO users(name, email, password, role) VALUES ($1,$2,$3,$4) RETURNING *
         `,[name, email, hashedPassword, role],)
@@ -22,14 +21,12 @@ const loginIntoDB = async(payLoad:ILogin) =>{
     const userData = await pool.query(`
         SELECT * FROM users WHERE email=$1
         `, [email])
-
+        
         if(userData.rows.length === 0){
             throw new Error("Invalid Email or Credintials!!");
         };
     const user =userData.rows[0];
     const matchPassword = await bcrypt.compare(password, user.password)
-    console.log("match password: ", matchPassword);
-
     if(!matchPassword){
         throw new Error("Invalid Password!!");
     }
