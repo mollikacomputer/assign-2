@@ -28,66 +28,29 @@ const createIssueIntoDB = async (payLoad: IIssue) => {
 //-------end-issue created--------
 // //-------start-get all issue created--------
 const getAllIssuesFromDB = async () => {
-
-  // 1. Get all issues
-  const issuesResult = await pool.query(`
-    SELECT id, reported_id, title, description, status, type, created_at, updated_at
+  const result = await pool.query(`
+    SELECT issues.*, users.name, users.role
     FROM issues
-    ORDER BY id DESC
+    JOIN users ON users.id = issues.reported_id
   `);
 
-  const issues = issuesResult.rows;
-
-  // 2. Extract all reporter ids
-  const reporterIds = [
-    ...new Set(issues.map(issue => issue.reported_id))
-  ];
-
-  // 3. Get users data
-  const usersResult = await pool.query(
-    `
-    SELECT id, name, role
-    FROM users
-    WHERE id = ANY($1)
-    `,
-    [reporterIds]
-  );
-
-  // 4. Create users map
-  const userMap = new Map();
-
-  usersResult.rows.forEach(user => {
-    userMap.set(user.id, user);
-  });
-
-  // 5. Final formatted response
-  const formattedIssues = issues.map(issue => ({
+  return result.rows.map((issue) => ({
     id: issue.id,
     title: issue.title,
     description: issue.description,
     type: issue.type,
     status: issue.status,
-
-    reporter: userMap.get(issue.reported_id),
-
+    reporter: {
+      id: issue.reported_id,
+      name: issue.name,
+      role: issue.role,
+    },
     created_at: issue.created_at,
     updated_at: issue.updated_at,
   }));
-
-  return {
-    success: true,
-    message: "Issues retrived successfully",
-    data: formattedIssues
-  };
 };
 //-------end-get all issue created--------
 //-------start-get single issue created--------
-// const getSingleIssueFromDB = async(reported_id:string)=>{
-//     const result = await pool.query(`
-//         SELECT * FROM issues WHERE reported_id =$1
-//         `, [reported_id])
-//     return result.rows[0];
-// };
 
 const getSingleIssueFromDB = async (id: number) => {
   const result = await pool.query(
@@ -99,6 +62,9 @@ const getSingleIssueFromDB = async (id: number) => {
     `,
     [id]
   );
+  if(result.rows.length ===0){
+    throw new Error("Issues not found!!")
+  }
 
   return result.rows[0];
 };
