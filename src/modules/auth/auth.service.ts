@@ -13,7 +13,7 @@ const signupUserInToDB = async(payLoad:ISignup)=>{
         INSERT INTO users(name, email, password, role) VALUES ($1,$2,$3,$4) RETURNING *
         `,[name, email, hashedPassword, role],)
         delete result.rows[0].password;
-        return result;
+        return result.rows[0];
 }
 //--------end signup or register-------------
 //--------start login service logic -------------

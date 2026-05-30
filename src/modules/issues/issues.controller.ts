@@ -8,7 +8,7 @@ const createIssue = async(req: Request, res:Response )=>{
            const result = await issueService.createIssueIntoDB(req.body);
             res.status(201).json({
             status:true,
-            message:"User registered successfully.",
+            message:"Issue Created successfully.",
             data:result,
             });
     
@@ -27,7 +27,7 @@ const getAllIssues = async(req:Request, res:Response)=>{
         const result = await issueService.getAllIssuesFromDB();
         res.status(201).json({
         status:true,
-        message:"User registered successfully.",
+        message:"Get all Issues successfully.",
         data:result,
         });
     } catch (error:any) {
