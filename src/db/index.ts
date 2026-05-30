@@ -24,7 +24,7 @@ export const initDB = async () => {
 
     await pool.query(`
   CREATE TABLE IF NOT EXISTS issues(
-    id INT,
+    id INT NOT NULL,
 
     title VARCHAR(150) NOT NULL
         CHECK (char_length(title) <= 150),

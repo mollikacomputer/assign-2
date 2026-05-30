@@ -51,7 +51,6 @@ const getAllIssuesFromDB = async () => {
 };
 //-------end-get all issue created--------
 //-------start-get single issue created--------
-
 const getSingleIssueFromDB = async (id: number) => {
   const result = await pool.query(
     `
@@ -69,8 +68,58 @@ const getSingleIssueFromDB = async (id: number) => {
   return result.rows[0];
 };
 //-------end-get single issue created--------
+//-------end-delete single issue created--------
+const deleteIssueFromDB = async (issueId: number) => {
+  const result = await pool.query(
+    `DELETE FROM issues WHERE id = $1 RETURNING *`,
+    [issueId]
+  );
+
+  return result.rows[0];
+};
+//-------end-delete single issue created--------
+//-------start updated issue single issue created--------
+const findIssueById = async (id: number) => {
+  const result = await pool.query(
+    `SELECT * FROM issues WHERE id = $1`,
+    [id]
+  );
+
+  return result.rows[0] || null;
+};
+
+const updateIssueFromDB = async (
+  id: number,
+  data: {
+    title?: string;
+    description?: string;
+    type?: string;
+  }
+) => {
+  const { title, description, type } = data;
+
+  const result = await pool.query(
+    `
+    UPDATE issues
+    SET
+      title = COALESCE($1, title),
+      description = COALESCE($2, description),
+      type = COALESCE($3, type),
+      updated_at = NOW()
+    WHERE id = $4
+    RETURNING *
+    `,
+    [title, description, type, id]
+  );
+
+  return result.rows[0];
+};
+//-------end-updated issue created--------
 export const issueService = {
     createIssueIntoDB,
     getAllIssuesFromDB,
     getSingleIssueFromDB,
+    deleteIssueFromDB,
+    findIssueById,
+    updateIssueFromDB,
 }
