@@ -33,7 +33,9 @@ const getAllIssuesFromDB = async () => {
     FROM issues
     JOIN users ON users.id = issues.reported_id
   `);
-
+    if(result.rows.length ===0){
+      throw new Error("Have No Issue Empty")
+    }
   return result.rows.map((issue) => ({
     id: issue.id,
     title: issue.title,
