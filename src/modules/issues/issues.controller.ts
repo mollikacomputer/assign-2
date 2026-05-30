@@ -147,5 +147,4 @@ export const issueController = {
     getSingleIssue,
     deleteIssue,
     updateIssue,
-
 }

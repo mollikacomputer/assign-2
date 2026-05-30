@@ -9,7 +9,6 @@ const signUpUser = async(req:Request, res:Response)=>{
         message:"User registered successfully.",
         data:result,
         });
-
     } catch (error:any) {
         res.status(500).json({
             success:false,
@@ -28,7 +27,6 @@ const loginUser = async(req: Request, res:Response)=>{
         message:"Login Successfully",
         data:result,
         });
-    console.log(result);
     } catch (error:any) {
         res.status(403).json({
         success:false,
